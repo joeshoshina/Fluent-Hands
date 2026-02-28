@@ -30,7 +30,11 @@ function classifyASLLetter(landmarks, targetLetter) {
   const indexExtendedUpsideDown = fingerDown(8, 5);
   const middleExtendedUpsideDown = fingerDown(12, 9);
   const straightenThumbDown = fingerDown(4, 2);
-  //const thumbNearMiddle = lm[4].x > lm[9].x
+  const pinkyCurledDown = !fingerDown(17, 20);
+  const ringCurledDown = !fingerDown(13, 16);
+
+  const thumbBetweenMiddle =  (lm[4].x < lm[10].x) && (lm[6].x < lm[4].x)
+  const middleBetweenThumb = (lm[6].x > lm[11].x) && (lm[2].x < lm[11].x)
 
   // Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y)
   const indexPointing = Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) && lm[8].x < lm[5].x;
@@ -201,11 +205,13 @@ function classifyASLLetter(landmarks, targetLetter) {
     if(upsideDown && 
       //inf && pinkyExtended && thumbNearMiddle && 
       indexExtendedUpsideDown
-      &&middleExtendedUpsideDown) return "P";
+      &&middleExtendedUpsideDown && ringCurledDown && pinkyCurledDown && thumbBetweenMiddle) return "P";
   }
 
   if (targetLetter === "Q"){
-    if(upsideDown && indexExtendedUpsideDown  && !middleExtendedUpsideDown && straightenThumbDown) return "Q";
+    if(upsideDown && indexExtendedUpsideDown  && 
+      middleBetweenThumb && straightenThumbDown && 
+      pinkyCurledDown && ringCurledDown) return "Q";
   }
 
   if (targetLetter === "T") {
