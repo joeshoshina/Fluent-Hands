@@ -1,25 +1,26 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import TestEntry from "../games/TestEntry";
 
 const GAME_MODES = [
   {
     id: "blitz",
     label: "Blitz",
-    progress: 35,
+    progressKey: "blitzProgress",
     color: "bg-purple-600 hover:bg-purple-500",
     route: "/games/blitz",
   },
   {
     id: "practice",
     label: "Practice",
-    progress: 60,
+    progressKey: "practiceProgress",
     color: "bg-blue-600 hover:bg-blue-500",
     route: "/games/practice",
   },
   {
     id: "challenge",
     label: "Challenge",
-    progress: 0,
+    progressKey: "challengeProgress",
     color: "bg-emerald-600 hover:bg-emerald-500",
     route: "/games/challenge",
   },
@@ -27,6 +28,22 @@ const GAME_MODES = [
 
 const Challenges = () => {
   const navigate = useNavigate();
+  const [progress, setProgress] = useState({});
+
+  useEffect(() => {
+    const loadProgress = () => {
+      const newProgress = {};
+      GAME_MODES.forEach((mode) => {
+        const saved = localStorage.getItem(mode.progressKey);
+        newProgress[mode.id] = saved ? parseInt(saved, 10) : 0;
+      });
+      setProgress(newProgress);
+    };
+
+    loadProgress();
+    window.addEventListener("focus", loadProgress);
+    return () => window.removeEventListener("focus", loadProgress);
+  }, []);
 
   return (
     <div className="relative w-full py-16 md:py-24">
@@ -58,7 +75,7 @@ const Challenges = () => {
               >
                 <TestEntry
                   label={mode.label}
-                  progress={mode.progress}
+                  progress={progress[mode.id] || 0}
                   color={mode.color}
                   onClick={() => navigate(mode.route)}
                 />
