@@ -11,6 +11,14 @@ function classifyASLLetter(landmarks, targetLetter) {
   // Helper: is fingertip above its MCP (knuckle)?
   const tipAboveMCP = (tipIdx, mcpIdx) => lm[tipIdx].y < lm[mcpIdx].y;
   const tipAbovePIP = (tipIdx, pipIdx) => lm[tipIdx].y < lm[pipIdx].y;
+  const avgMCPY =
+  (lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 4;
+
+  const upsideDown = avgMCPY > lm[0].y;
+  const fingerDown = (tip, mcp) => lm[tip].y > lm[mcp].y;
+  
+
+  //const tipBelowWrist = (tipIdx) => lm[tipIdx].y > lm[0].y;
 
   // Finger extended checks (y-axis: lower y = higher on screen)
   const thumbExtended = lm[4].x < lm[3].x  // thumb tip left of thumb IP (for right hand)
@@ -18,6 +26,10 @@ function classifyASLLetter(landmarks, targetLetter) {
   const middleExtended = tipAboveMCP(12, 9);
   const ringExtended = tipAboveMCP(16, 13);
   const pinkyExtended = tipAboveMCP(20, 17);
+  
+  const indexExtendedUpsideDown = fingerDown(8, 5);
+  const middleExtendedUpsideDown = fingerDown(12, 9);
+  //const thumbNearMiddle = lm[4].x > lm[9].x
 
   const indexPointing = lm[8].x < lm[7].x
   const middlePointing = lm[12].x < lm[11].x
@@ -30,6 +42,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   const pinkyCurled = !pinkyExtended;
 
   const thumbStraightened = lm[4].y < lm[3].y;
+  const thumbStraightenedDown = lm[4].y > lm[3].y;
 
   const indexCurledPointing = !indexPointing
   const middleCurledPointing = !middlePointing
@@ -175,6 +188,13 @@ function classifyASLLetter(landmarks, targetLetter) {
         }
       }
     }
+  }
+  // broad coverage of P, check if fingers curled later and figure out thumb issues
+  if (targetLetter === "P"){
+    if(upsideDown && 
+      //inf && pinkyExtended && thumbNearMiddle && 
+      indexExtendedUpsideDown
+      &&middleExtendedUpsideDown) return "P";
   }
 
   if (targetLetter === "T") {
