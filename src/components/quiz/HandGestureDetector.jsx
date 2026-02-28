@@ -19,10 +19,20 @@ function classifyASLLetter(landmarks, targetLetter) {
   const ringExtended = tipAboveMCP(16, 13);
   const pinkyExtended = tipAboveMCP(20, 17);
 
+  const indexPointing = lm[8].x < lm[7].x
+  const middlePointing = lm[12].x < lm[11].x
+  const ringPointing = lm[16].x < lm[15].x
+  const pinkyPointing = lm[20].x < lm[19].x
+ 
   const indexCurled = !indexExtended;
   const middleCurled = !middleExtended;
   const ringCurled = !ringExtended;
   const pinkyCurled = !pinkyExtended;
+
+  const indexCurledPointing = !indexPointing
+  const middleCurledPointing = !middlePointing
+  const ringCurledPointing = !ringPointing
+  const pinkyCurledPointing = !pinkyPointing
 
   // A: Fist with thumb to side
   if (targetLetter === "A") {
@@ -94,6 +104,12 @@ function classifyASLLetter(landmarks, targetLetter) {
       const pointingSideways =
         Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y);
       if (pointingSideways) return "G";
+    }
+  }
+
+  if (targetLetter === "H") {
+    if (indexPointing && middlePointing && ringCurledPointing && pinkyCurledPointing) {
+      return "H";
     }
   }
 
