@@ -11,37 +11,43 @@ function classifyASLLetter(landmarks, targetLetter) {
   // Helper: is fingertip above its MCP (knuckle)?
   const tipAboveMCP = (tipIdx, mcpIdx) => lm[tipIdx].y < lm[mcpIdx].y;
   const tipAbovePIP = (tipIdx, pipIdx) => lm[tipIdx].y < lm[pipIdx].y;
-  const avgMCPY =
-  (lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 4;
+  const avgMCPY = (lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 4;
 
   const upsideDown = avgMCPY > lm[0].y;
   const fingerDown = (tip, mcp) => lm[tip].y > lm[mcp].y;
-  
 
   //const tipBelowWrist = (tipIdx) => lm[tipIdx].y > lm[0].y;
 
   // Finger extended checks (y-axis: lower y = higher on screen)
-  const thumbExtended = lm[4].x < lm[3].x  // thumb tip left of thumb IP (for right hand)
+  const thumbExtended = lm[4].x < lm[3].x; // thumb tip left of thumb IP (for right hand)
   const indexExtended = tipAboveMCP(8, 5);
   const middleExtended = tipAboveMCP(12, 9);
   const ringExtended = tipAboveMCP(16, 13);
   const pinkyExtended = tipAboveMCP(20, 17);
-  
+
   const indexExtendedUpsideDown = fingerDown(8, 5);
   const middleExtendedUpsideDown = fingerDown(12, 9);
   const straightenThumbDown = fingerDown(4, 2);
   const pinkyCurledDown = !fingerDown(17, 20);
   const ringCurledDown = !fingerDown(13, 16);
 
-  const thumbBetweenMiddle =  (lm[4].x < lm[10].x) && (lm[6].x < lm[4].x)
-  const middleBetweenThumb = (lm[6].x > lm[11].x) && (lm[2].x < lm[11].x)
+  const thumbBetweenMiddle = lm[4].x < lm[10].x && lm[6].x < lm[4].x;
+  const middleBetweenThumb = lm[6].x > lm[11].x && lm[2].x < lm[11].x;
 
   // Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y)
-  const indexPointing = Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) && lm[8].x < lm[5].x;
-  const middlePointing = Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) && lm[12].x < lm[9].x;
-  const ringPointing = Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) && lm[16].x < lm[13].x;
-  const pinkyPointing = Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) && lm[20].x < lm[17].x;
- 
+  const indexPointing =
+    Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) &&
+    lm[8].x < lm[5].x;
+  const middlePointing =
+    Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) &&
+    lm[12].x < lm[9].x;
+  const ringPointing =
+    Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) &&
+    lm[16].x < lm[13].x;
+  const pinkyPointing =
+    Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) &&
+    lm[20].x < lm[17].x;
+
   const indexCurled = !indexExtended;
   const middleCurled = !middleExtended;
   const ringCurled = !ringExtended;
@@ -54,19 +60,27 @@ function classifyASLLetter(landmarks, targetLetter) {
   // const middleCurledPointing = !middlePointing
   // const ringCurledPointing = !ringPointing
   // const pinkyCurledPointing = !pinkyPointing
-  const indexCurledPointing = Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) && lm[8].x > lm[6].x;
-  const middleCurledPointing = Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) && lm[12].x > lm[10].x;
-  const ringCurledPointing = Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) && lm[16].x > lm[14].x;
-  const pinkyCurledPointing = Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) && lm[20].x > lm[18].x;
+  const indexCurledPointing =
+    Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) &&
+    lm[8].x > lm[6].x;
+  const middleCurledPointing =
+    Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) &&
+    lm[12].x > lm[10].x;
+  const ringCurledPointing =
+    Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) &&
+    lm[16].x > lm[14].x;
+  const pinkyCurledPointing =
+    Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) &&
+    lm[20].x > lm[18].x;
 
-  const indexCrooked = lm[6].y < lm[5].y && lm[8].y > lm[7].y
+  const indexCrooked = lm[6].y < lm[5].y && lm[8].y > lm[7].y;
 
   // A: Fist with thumb to side
   if (targetLetter === "A") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb isn't tucked so we can distinguish between M
       if (lm[4].x < lm[6].x) {
-        return "A"
+        return "A";
       }
     }
   }
@@ -125,7 +139,12 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // G: Index pointing sideways, thumb up
   if (targetLetter === "G") {
-    if (indexPointing && middleCurledPointing && ringCurledPointing && pinkyCurledPointing) {
+    if (
+      indexPointing &&
+      middleCurledPointing &&
+      ringCurledPointing &&
+      pinkyCurledPointing
+    ) {
       if (lm[3].x < lm[18].x) {
         return "G";
       }
@@ -133,8 +152,18 @@ function classifyASLLetter(landmarks, targetLetter) {
   }
 
   if (targetLetter === "H") {
-    console.log(indexPointing, middlePointing, ringCurledPointing, pinkyCurledPointing);
-    if (indexPointing && middlePointing && ringCurledPointing && pinkyCurledPointing) {
+    console.log(
+      indexPointing,
+      middlePointing,
+      ringCurledPointing,
+      pinkyCurledPointing,
+    );
+    if (
+      indexPointing &&
+      middlePointing &&
+      ringCurledPointing &&
+      pinkyCurledPointing
+    ) {
       return "H";
     }
   }
@@ -144,17 +173,27 @@ function classifyASLLetter(landmarks, targetLetter) {
     if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
   }
 
-  if (targetLetter === "K"){
-    if(
-      thumbStraightened && indexExtended && middleExtended && ringCurled && pinkyCurled 
-      && (lm[4].x > lm[8].x)
-    )return "K";
+  if (targetLetter === "K") {
+    if (
+      thumbStraightened &&
+      indexExtended &&
+      middleExtended &&
+      ringCurled &&
+      pinkyCurled &&
+      lm[4].x > lm[8].x
+    )
+      return "K";
   }
 
   if (targetLetter === "M") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is tucked
-      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+      if (
+        lm[4].x > lm[5].x &&
+        lm[4].x > lm[6].x &&
+        lm[4].x > lm[7].x &&
+        lm[4].x > lm[8].x
+      ) {
         // Check that thumb is behind other joints
         if (lm[4].z > lm[10].z) {
           return "M";
@@ -167,16 +206,18 @@ function classifyASLLetter(landmarks, targetLetter) {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is between ring and middle
       if (lm[4].x > lm[10].x && lm[4].y < lm[14].y) {
-        return "N"
+        return "N";
       }
     }
   }
 
-
   // O: Fingers curved to form circle with thumb
   if (targetLetter === "O") {
     if (!indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
-      const thumbTipToIndexTip = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
+      const thumbTipToIndexTip = Math.hypot(
+        lm[4].x - lm[8].x,
+        lm[4].y - lm[8].y,
+      );
       if (thumbTipToIndexTip < 0.1) return "O";
     }
   }
@@ -184,7 +225,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   if (targetLetter === "R") {
     if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
       if (lm[12].x < lm[8].x) {
-        return "R"
+        return "R";
       }
     }
   }
@@ -192,7 +233,12 @@ function classifyASLLetter(landmarks, targetLetter) {
   if (targetLetter === "S") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is tucked
-      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+      if (
+        lm[4].x > lm[5].x &&
+        lm[4].x > lm[6].x &&
+        lm[4].x > lm[7].x &&
+        lm[4].x > lm[8].x
+      ) {
         // Check that thumb is in front of other joints
         if (lm[4].z < lm[12].z) {
           return "S";
@@ -201,24 +247,36 @@ function classifyASLLetter(landmarks, targetLetter) {
     }
   }
   // broad coverage of P, check if fingers curled later and figure out thumb issues
-  if (targetLetter === "P"){
-    if(upsideDown && 
-      //inf && pinkyExtended && thumbNearMiddle && 
-      indexExtendedUpsideDown
-      &&middleExtendedUpsideDown && ringCurledDown && pinkyCurledDown && thumbBetweenMiddle) return "P";
+  if (targetLetter === "P") {
+    if (
+      upsideDown &&
+      //inf && pinkyExtended && thumbNearMiddle &&
+      indexExtendedUpsideDown &&
+      middleExtendedUpsideDown &&
+      ringCurledDown &&
+      pinkyCurledDown &&
+      thumbBetweenMiddle
+    )
+      return "P";
   }
 
-  if (targetLetter === "Q"){
-    if(upsideDown && indexExtendedUpsideDown  && 
-      middleBetweenThumb && straightenThumbDown && 
-      pinkyCurledDown && ringCurledDown) return "Q";
+  if (targetLetter === "Q") {
+    if (
+      upsideDown &&
+      indexExtendedUpsideDown &&
+      middleBetweenThumb &&
+      straightenThumbDown &&
+      pinkyCurledDown &&
+      ringCurledDown
+    )
+      return "Q";
   }
 
   if (targetLetter === "T") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is between ring and middle
       if (lm[4].x > lm[6].x && lm[4].x < lm[10].x) {
-        return "T"
+        return "T";
       }
     }
   }
@@ -239,14 +297,14 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // W: Index, middle, ring extended
   if (targetLetter === "W") {
-  if (indexExtended && middleExtended && ringExtended && pinkyCurled)
-    return "W";
+    if (indexExtended && middleExtended && ringExtended && pinkyCurled)
+      return "W";
   }
 
   if (targetLetter === "X") {
     if (indexCrooked && middleCurled && ringCurled && pinkyCurled) {
       if (lm[4].z < lm[10].z) {
-        return "X"
+        return "X";
       }
     }
   }
@@ -302,7 +360,7 @@ export default function HandGestureDetector({
           setStatus("success");
           clearInterval(timerRef.current);
           if (cameraRef.current) cameraRef.current.stop();
-          setTimeout(() => onSuccess(), 1200);
+          setTimeout(() => onSuccess(), 200);
         }
       }
     },
@@ -390,7 +448,7 @@ export default function HandGestureDetector({
                   clearInterval(timerRef.current);
                   setStatus("fail");
                   if (cameraRef.current) cameraRef.current.stop();
-                  setTimeout(() => onFail(), 1200);
+                  setTimeout(() => onFail(), 200);
                 }
               }
             }, 1000);
