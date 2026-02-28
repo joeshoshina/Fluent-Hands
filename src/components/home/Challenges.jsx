@@ -3,15 +3,15 @@ import TestEntry from "../games/TestEntry";
 
 const GAME_MODES = [
   {
-    id: "blitz",
-    label: "Blitz",
+    id: "practice",
+    label: "Practice",
     progress: 35,
     color: "bg-purple-600 hover:bg-purple-500",
     route: "/games/blitz",
   },
   {
-    id: "practice",
-    label: "Practice",
+    id: "blitz",
+    label: "Blitz",
     progress: 60,
     color: "bg-blue-600 hover:bg-blue-500",
     route: "/games/practice",

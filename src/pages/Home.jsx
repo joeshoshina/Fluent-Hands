@@ -5,7 +5,7 @@ import Challenges from "../components/home/Challenges";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-white relative">
+    <div className="min-h-screen bg-violet-50 relative">
       <HeroHeader />
       <div className="relative">
         <div className="relative z-0 mb-0">
