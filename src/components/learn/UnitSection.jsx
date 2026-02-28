@@ -16,9 +16,13 @@ export default function UnitSection({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0, y: 20 }}     // Start slightly down and invisible
+      animate={{ opacity: 1, y: 0 }}      // Slide up to position
+      exit={{ opacity: 0, scale: 0.95 }} // Shrink and fade when leaving
+      transition={{ 
+        duration: 0.4, 
+        ease: [0.4, 0, 0.2, 1] // This is a "standard" smooth cubic-bezier
+      }}
       className="mb-8"
     >
       <div className="flex items-center gap-3 mb-6">
