@@ -175,6 +175,15 @@ function classifyASLLetter(landmarks, targetLetter) {
     }
   }
 
+  if (targetLetter === "T") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is between ring and middle
+      if (lm[4].x > lm[6].x && lm[4].x < lm[10].x) {
+        return "T"
+      }
+    }
+  }
+
   if (targetLetter === "U") {
     if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
       return "U";
