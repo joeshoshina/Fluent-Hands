@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Camera, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 // ASL finger spelling classifier using MediaPipe landmarks
-function classifyASLLetter(landmarks) {
+function classifyASLLetter(landmarks, targetLetter) {
   if (!landmarks || landmarks.length < 21) return null;
 
   const lm = landmarks;
@@ -13,7 +13,7 @@ function classifyASLLetter(landmarks) {
   const tipAbovePIP = (tipIdx, pipIdx) => lm[tipIdx].y < lm[pipIdx].y;
 
   // Finger extended checks (y-axis: lower y = higher on screen)
-  const thumbExtended = lm[4].x < lm[3].x; // thumb tip left of thumb IP (for right hand)
+  const thumbExtended = lm[4].x < lm[3].x  // thumb tip left of thumb IP (for right hand)
   const indexExtended = tipAboveMCP(8, 5);
   const middleExtended = tipAboveMCP(12, 9);
   const ringExtended = tipAboveMCP(16, 13);
@@ -25,91 +25,123 @@ function classifyASLLetter(landmarks) {
   const pinkyCurled = !pinkyExtended;
 
   // A: Fist with thumb to side
-  if (
-    indexCurled &&
-    middleCurled &&
-    ringCurled &&
-    pinkyCurled &&
-    !thumbExtended
-  )
-    return "A";
-
+  if (targetLetter === "A") {
+    if (
+      indexCurled &&
+      middleCurled &&
+      ringCurled &&
+      pinkyCurled &&
+      !thumbExtended
+    )
+      return "A";
+  }
   // B: All four fingers up, thumb tucked
-  if (indexExtended && middleExtended && ringExtended && pinkyExtended) {
-    const thumbTucked = lm[4].x > lm[3].x;
-    if (thumbTucked) return "B";
+  if (targetLetter === "B") {
+    if (indexExtended && middleExtended && ringExtended && pinkyExtended) {
+      const thumbTucked = lm[4].x > lm[3].x;
+      if (thumbTucked) return "B";
+    }
   }
 
   // C: Curved hand (all fingers slightly curled, not closed)
-  if (!indexCurled && !middleCurled && !ringCurled && !pinkyCurled) {
-    const tipDist = Math.abs(lm[8].x - lm[4].x);
-    if (tipDist < 0.2) return "C";
+  if (targetLetter === "C") {
+    if (!indexCurled && !middleCurled && !ringCurled && !pinkyCurled) {
+      const tipDist = Math.abs(lm[8].x - lm[4].x);
+      if (tipDist < 0.2) return "C";
+    }
+  }
+
+  // L: Index and thumb extended, others curled
+  if (targetLetter === "L") {
+    if (
+      indexExtended &&
+      middleCurled &&
+      ringCurled &&
+      pinkyCurled &&
+      thumbExtended
+    )
+      return "L";
   }
 
   // D: Index up, others curled
-  if (indexExtended && middleCurled && ringCurled && pinkyCurled) return "D";
+  if (targetLetter === "D") {
+    if (indexExtended && middleCurled && ringCurled && pinkyCurled) return "D";
+  }
 
   // E: All fingers bent/curled forward
-  if (
-    !tipAbovePIP(8, 6) &&
-    !tipAbovePIP(12, 10) &&
-    !tipAbovePIP(16, 14) &&
-    !tipAbovePIP(20, 18)
-  )
-    return "E";
+  if (targetLetter === "E") {
+    if (
+      !tipAbovePIP(8, 6) &&
+      !tipAbovePIP(12, 10) &&
+      !tipAbovePIP(16, 14) &&
+      !tipAbovePIP(20, 18)
+    )
+      return "E";
+  }
 
   // F: Index & thumb touching, others up
-  if (!indexExtended && middleExtended && ringExtended && pinkyExtended) {
-    const thumbIndexClose =
-      Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y) < 0.08;
-    if (thumbIndexClose) return "F";
+  if (targetLetter === "F") {
+    if (!indexExtended && middleExtended && ringExtended && pinkyExtended) {
+      const thumbIndexClose =
+        Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y) < 0.08;
+      if (thumbIndexClose) return "F";
+    }
   }
 
   // G: Index pointing sideways, thumb up
-  if (indexExtended && middleCurled && ringCurled && pinkyCurled) {
-    const pointingSideways =
-      Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y);
-    if (pointingSideways) return "G";
+  if (targetLetter === "G") {
+    if (indexExtended && middleCurled && ringCurled && pinkyCurled) {
+      const pointingSideways =
+        Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y);
+      if (pointingSideways) return "G";
+    }
   }
 
   // I: Pinky only extended
-  if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
+  if (targetLetter === "I") {
+    if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
+  }
 
-  // L: Index and thumb extended, others curled
-  if (
-    indexExtended &&
-    middleCurled &&
-    ringCurled &&
-    pinkyCurled &&
-    thumbExtended
-  )
-    return "L";
 
   // O: Fingers curved to form circle with thumb
-  if (!indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
-    const thumbTipToIndexTip = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
-    if (thumbTipToIndexTip < 0.1) return "O";
+  if (targetLetter === "O") {
+    if (!indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
+      const thumbTipToIndexTip = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
+      if (thumbTipToIndexTip < 0.1) return "O";
+    }
+  }
+
+  if (targetLetter === "U") {
+    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
+      return "U";
+    }
   }
 
   // V: Index and middle extended in V shape
-  if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
-    const vShape = Math.abs(lm[8].x - lm[12].x) > 0.03;
-    if (vShape) return "V";
+  if (targetLetter === "V") {
+    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
+      const vShape = Math.abs(lm[8].x - lm[12].x) > 0.03;
+      if (vShape) return "V";
+    }
   }
 
   // W: Index, middle, ring extended
+  if (targetLetter === "W") {
   if (indexExtended && middleExtended && ringExtended && pinkyCurled)
     return "W";
+  }
 
   // Y: Thumb and pinky extended
-  if (
-    indexCurled &&
-    middleCurled &&
-    ringCurled &&
-    pinkyExtended &&
-    thumbExtended
-  )
-    return "Y";
+  if (targetLetter === "Y") {
+    if (
+      indexCurled &&
+      middleCurled &&
+      ringCurled &&
+      pinkyExtended &&
+      thumbExtended
+    )
+      return "Y";
+  }
 
   return null;
 }
@@ -202,7 +234,7 @@ export default function HandGestureDetector({
               lineWidth: 1,
               radius: 4,
             });
-            const letter = classifyASLLetter(landmarks);
+            const letter = classifyASLLetter(landmarks, targetLetter);
             handleDetectionResult(letter);
           } else {
             handleDetectionResult(null);
