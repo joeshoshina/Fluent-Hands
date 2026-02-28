@@ -124,11 +124,15 @@ function classifyASLLetter(landmarks, targetLetter) {
       && (lm[4].x > lm[8].x)
     )return "K";
   }
+
   if (targetLetter === "M") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is tucked
       if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
-        return "M";
+        // Check that thumb is behind other joints
+        if (lm[4].z > lm[10].z) {
+          return "M";
+        }
       }
     }
   }
@@ -155,6 +159,18 @@ function classifyASLLetter(landmarks, targetLetter) {
     if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
       if (lm[12].x < lm[8].x) {
         return "R"
+      }
+    }
+  }
+
+  if (targetLetter === "S") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is tucked
+      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+        // Check that thumb is in front of other joints
+        if (lm[4].z < lm[12].z) {
+          return "S";
+        }
       }
     }
   }
