@@ -18,7 +18,7 @@ export default function GestureDemo() {
       setCue(null);
       setIdx((i) => (i + 1) % LETTERS.length);
       keyRef.current += 1;
-    }, 2500);
+    }, 2500); // this is the time
   };
 
   const handleSuccess = () => {
