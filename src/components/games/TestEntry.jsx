@@ -2,6 +2,7 @@ export default function LevelButton({
   label = "label",
   progress = 20,
   onClick,
+  color,
 }) {
   const radius = 40;
   const stroke = 6;
@@ -17,7 +18,7 @@ export default function LevelButton({
     <div className="flex flex-col gap-4 items-center">
       <button
         onClick={onClick}
-        className="relative w-24 aspect-square rounded-full flex items-center justify-center bg-pink-600 hover:bg-pink-500 transition-transform hover:scale-105 active:scale-95"
+        className={`relative w-24 aspect-square rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg ${color || "bg-pink-600 hover:bg-pink-500"}`}
       >
         <svg
           height={radius * 2}
