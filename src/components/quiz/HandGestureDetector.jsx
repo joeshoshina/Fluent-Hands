@@ -29,6 +29,8 @@ function classifyASLLetter(landmarks, targetLetter) {
   const ringCurled = !ringExtended;
   const pinkyCurled = !pinkyExtended;
 
+  const thumbStraightened = lm[4].y < lm[3].y;
+
   const indexCurledPointing = !indexPointing
   const middleCurledPointing = !middlePointing
   const ringCurledPointing = !ringPointing
@@ -118,6 +120,12 @@ function classifyASLLetter(landmarks, targetLetter) {
     if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
   }
 
+  if (targetLetter === "K"){
+    if(
+      thumbStraightened && indexExtended && middleExtended && ringCurled && pinkyCurled 
+      && (lm[4].x > lm[8].x)
+    )return "K";
+  }
 
   // O: Fingers curved to form circle with thumb
   if (targetLetter === "O") {
