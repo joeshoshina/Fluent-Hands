@@ -36,6 +36,8 @@ function classifyASLLetter(landmarks, targetLetter) {
   const ringCurledPointing = !ringPointing
   const pinkyCurledPointing = !pinkyPointing
 
+  const indexCrooked = lm[6].y < lm[5].y && lm[8].y > lm[7].y
+
   // A: Fist with thumb to side
   if (targetLetter === "A") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
@@ -202,6 +204,14 @@ function classifyASLLetter(landmarks, targetLetter) {
   if (targetLetter === "W") {
   if (indexExtended && middleExtended && ringExtended && pinkyCurled)
     return "W";
+  }
+
+  if (targetLetter === "X") {
+    if (indexCrooked && middleCurled && ringCurled && pinkyCurled) {
+      if (lm[4].z < lm[10].z) {
+        return "X"
+      }
+    }
   }
 
   // Y: Thumb and pinky extended
