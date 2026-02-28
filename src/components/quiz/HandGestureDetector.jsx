@@ -29,6 +29,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   
   const indexExtendedUpsideDown = fingerDown(8, 5);
   const middleExtendedUpsideDown = fingerDown(12, 9);
+  const straightenThumbDown = fingerDown(4, 2);
   //const thumbNearMiddle = lm[4].x > lm[9].x
 
   const indexPointing = lm[8].x < lm[7].x
@@ -193,6 +194,10 @@ function classifyASLLetter(landmarks, targetLetter) {
       //inf && pinkyExtended && thumbNearMiddle && 
       indexExtendedUpsideDown
       &&middleExtendedUpsideDown) return "P";
+  }
+
+  if (targetLetter === "Q"){
+    if(upsideDown && indexExtendedUpsideDown  && !middleExtendedUpsideDown && straightenThumbDown) return "Q";
   }
 
   if (targetLetter === "T") {
