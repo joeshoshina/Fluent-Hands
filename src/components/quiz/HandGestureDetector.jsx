@@ -151,6 +151,14 @@ function classifyASLLetter(landmarks, targetLetter) {
     }
   }
 
+  if (targetLetter === "R") {
+    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
+      if (lm[12].x < lm[8].x) {
+        return "R"
+      }
+    }
+  }
+
   if (targetLetter === "U") {
     if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
       return "U";
