@@ -36,14 +36,12 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // A: Fist with thumb to side
   if (targetLetter === "A") {
-    if (
-      indexCurled &&
-      middleCurled &&
-      ringCurled &&
-      pinkyCurled &&
-      !thumbExtended
-    )
-      return "A";
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb isn't tucked so we can distinguish between M
+      if (lm[4].x < lm[6].x) {
+        return "A"
+      }
+    }
   }
   // B: All four fingers up, thumb tucked
   if (targetLetter === "B") {
@@ -116,6 +114,15 @@ function classifyASLLetter(landmarks, targetLetter) {
   // I: Pinky only extended
   if (targetLetter === "I") {
     if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
+  }
+
+  if (targetLetter === "M") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is tucked
+      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+        return "M";
+      }
+    }
   }
 
 
