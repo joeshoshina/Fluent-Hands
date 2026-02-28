@@ -11,7 +11,10 @@ function classifyASLLetter(landmarks, targetLetter) {
   // Helper: is fingertip above its MCP (knuckle)?
   const tipAboveMCP = (tipIdx, mcpIdx) => lm[tipIdx].y < lm[mcpIdx].y;
   const tipAbovePIP = (tipIdx, pipIdx) => lm[tipIdx].y < lm[pipIdx].y;
-  const upsideDown = (lm[1].y && lm[5] && lm[9] && lm[13] && lm[17]) > lm[0].y;
+  const avgMCPY =
+  (lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 4;
+
+  const upsideDown = avgMCPY > lm[0].y;
   const fingerDown = (tip, mcp) => lm[tip].y > lm[mcp].y;
   
 
@@ -26,7 +29,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   
   const indexExtendedUpsideDown = fingerDown(8, 5);
   const middleExtendedUpsideDown = fingerDown(12, 9);
-  const thumbNearMiddle = lm[4].x > lm[9].x
+  //const thumbNearMiddle = lm[4].x > lm[9].x
 
   const indexPointing = lm[8].x < lm[7].x
   const middlePointing = lm[12].x < lm[11].x
@@ -39,6 +42,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   const pinkyCurled = !pinkyExtended;
 
   const thumbStraightened = lm[4].y < lm[3].y;
+  const thumbStraightenedDown = lm[4].y > lm[3].y;
 
   const indexCurledPointing = !indexPointing
   const middleCurledPointing = !middlePointing
@@ -47,14 +51,12 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // A: Fist with thumb to side
   if (targetLetter === "A") {
-    if (
-      indexCurled &&
-      middleCurled &&
-      ringCurled &&
-      pinkyCurled &&
-      !thumbExtended
-    )
-      return "A";
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb isn't tucked so we can distinguish between M
+      if (lm[4].x < lm[6].x) {
+        return "A"
+      }
+    }
   }
   // B: All four fingers up, thumb tucked
   if (targetLetter === "B") {
@@ -136,6 +138,28 @@ function classifyASLLetter(landmarks, targetLetter) {
     )return "K";
   }
 
+  if (targetLetter === "M") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is tucked
+      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+        // Check that thumb is behind other joints
+        if (lm[4].z > lm[10].z) {
+          return "M";
+        }
+      }
+    }
+  }
+
+  if (targetLetter === "N") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is between ring and middle
+      if (lm[4].x > lm[10].x && lm[4].y < lm[14].y) {
+        return "N"
+      }
+    }
+  }
+
+
   // O: Fingers curved to form circle with thumb
   if (targetLetter === "O") {
     if (!indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
@@ -144,10 +168,30 @@ function classifyASLLetter(landmarks, targetLetter) {
     }
   }
 
+  if (targetLetter === "R") {
+    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
+      if (lm[12].x < lm[8].x) {
+        return "R"
+      }
+    }
+  }
+
+  if (targetLetter === "S") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is tucked
+      if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
+        // Check that thumb is in front of other joints
+        if (lm[4].z < lm[12].z) {
+          return "S";
+        }
+      }
+    }
+  }
+  // broad coverage of P, check if fingers curled later and figure out thumb issues
   if (targetLetter === "P"){
     if(upsideDown && 
-      ringExtended && pinkyExtended && 
-      thumbNearMiddle && indexExtendedUpsideDown
+      //inf && pinkyExtended && thumbNearMiddle && 
+      indexExtendedUpsideDown
       &&middleExtendedUpsideDown) return "P";
   }
 
