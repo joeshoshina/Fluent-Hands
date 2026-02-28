@@ -31,10 +31,11 @@ function classifyASLLetter(landmarks, targetLetter) {
   const middleExtendedUpsideDown = fingerDown(12, 9);
   //const thumbNearMiddle = lm[4].x > lm[9].x
 
-  const indexPointing = lm[8].x < lm[7].x
-  const middlePointing = lm[12].x < lm[11].x
-  const ringPointing = lm[16].x < lm[15].x
-  const pinkyPointing = lm[20].x < lm[19].x
+  // Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y)
+  const indexPointing = Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) && lm[8].x < lm[5].x;
+  const middlePointing = Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) && lm[12].x < lm[9].x;
+  const ringPointing = Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) && lm[16].x < lm[13].x;
+  const pinkyPointing = Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) && lm[20].x < lm[17].x;
  
   const indexCurled = !indexExtended;
   const middleCurled = !middleExtended;
@@ -44,10 +45,14 @@ function classifyASLLetter(landmarks, targetLetter) {
   const thumbStraightened = lm[4].y < lm[3].y;
   const thumbStraightenedDown = lm[4].y > lm[3].y;
 
-  const indexCurledPointing = !indexPointing
-  const middleCurledPointing = !middlePointing
-  const ringCurledPointing = !ringPointing
-  const pinkyCurledPointing = !pinkyPointing
+  // const indexCurledPointing = !indexPointing
+  // const middleCurledPointing = !middlePointing
+  // const ringCurledPointing = !ringPointing
+  // const pinkyCurledPointing = !pinkyPointing
+  const indexCurledPointing = Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) && lm[8].x > lm[6].x;
+  const middleCurledPointing = Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) && lm[12].x > lm[10].x;
+  const ringCurledPointing = Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) && lm[16].x > lm[14].x;
+  const pinkyCurledPointing = Math.abs(lm[18].x - lm[17].x) > Math.abs(lm[18].y - lm[17].y) && lm[20].x > lm[18].x;
 
   const indexCrooked = lm[6].y < lm[5].y && lm[8].y > lm[7].y
 
@@ -115,14 +120,15 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // G: Index pointing sideways, thumb up
   if (targetLetter === "G") {
-    if (indexExtended && middleCurled && ringCurled && pinkyCurled) {
-      const pointingSideways =
-        Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y);
-      if (pointingSideways) return "G";
+    if (indexPointing && middleCurledPointing && ringCurledPointing && pinkyCurledPointing) {
+      if (lm[3].x < lm[18].x) {
+        return "G";
+      }
     }
   }
 
   if (targetLetter === "H") {
+    console.log(indexPointing, middlePointing, ringCurledPointing, pinkyCurledPointing);
     if (indexPointing && middlePointing && ringCurledPointing && pinkyCurledPointing) {
       return "H";
     }
