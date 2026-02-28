@@ -29,6 +29,8 @@ function classifyASLLetter(landmarks, targetLetter) {
   const ringCurled = !ringExtended;
   const pinkyCurled = !pinkyExtended;
 
+  const thumbStraightened = lm[4].y < lm[3].y;
+
   const indexCurledPointing = !indexPointing
   const middleCurledPointing = !middlePointing
   const ringCurledPointing = !ringPointing
@@ -116,11 +118,26 @@ function classifyASLLetter(landmarks, targetLetter) {
     if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
   }
 
+  if (targetLetter === "K"){
+    if(
+      thumbStraightened && indexExtended && middleExtended && ringCurled && pinkyCurled 
+      && (lm[4].x > lm[8].x)
+    )return "K";
+  }
   if (targetLetter === "M") {
     if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
       // Check that thumb is tucked
       if (lm[4].x > lm[5].x && lm[4].x > lm[6].x && lm[4].x > lm[7].x && lm[4].x > lm[8].x)  {
         return "M";
+      }
+    }
+  }
+
+  if (targetLetter === "N") {
+    if (indexCurled && middleCurled && ringCurled && pinkyCurled) {
+      // Check that thumb is between ring and middle
+      if (lm[4].x > lm[10].x && lm[4].y < lm[14].y) {
+        return "N"
       }
     }
   }
