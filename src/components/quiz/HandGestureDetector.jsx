@@ -5,6 +5,7 @@ import { Camera, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 // ASL finger spelling classifier using MediaPipe landmarks
 function classifyASLLetter(landmarks, targetLetter) {
   if (!landmarks || landmarks.length < 21) return null;
+  const isRight = landmarks[20].x < landmarks[0].x? true : false;
 
   const lm = landmarks;
 
@@ -278,16 +279,25 @@ function classifyASLLetter(landmarks, targetLetter) {
   }
 
   if (targetLetter === "U") {
-    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
-      return "U";
-    }
+      if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
+        return "U";
+      }
   }
 
   // V: Index and middle extended in V shape
   if (targetLetter === "V") {
-    if (indexExtended && middleExtended && ringCurled && pinkyCurled) {
-      const vShape = Math.abs(lm[8].x - lm[12].x) > 0.03;
+    if (indexExtended && middleExtended && ringCurled && pinkyCurled && isRight) {
+      //if (isRight){
+      //const vShape = Math.abs(lm[8].x - lm[12].x) > 0.03;
+      //if (vShape) return "V";
+
+      //}else {
+      const vShape = Math.abs(lm[12].x - lm[8].x) > 0.03;
       if (vShape) return "V";
+
+      //}
+
+      //if (vShape) return "V";
     }
   }
 
@@ -457,6 +467,13 @@ export default function HandGestureDetector({
               window.lastSentTime = now;
 
               const features = landmarks.flatMap((lm) => [lm.x, lm.y, lm.z]);
+              const isRight = landmarks[20].x < landmarks[0].x? true : false;
+
+              if (targetLetter === "U" || (targetLetter === "V" && isRight)){
+                //console.log("slipped in");
+                const letter = classifyASLLetter(landmarks, targetLetter);
+                handleDetectionResult(letter);
+              }
 
               fetch("http://127.0.0.1:5050/predict", {
                 method: "POST",
