@@ -152,12 +152,6 @@ function classifyASLLetter(landmarks, targetLetter) {
   }
 
   if (targetLetter === "H") {
-    console.log(
-      indexPointing,
-      middlePointing,
-      ringCurledPointing,
-      pinkyCurledPointing,
-    );
     if (
       (indexPointing &&
       middlePointing) &&
@@ -448,17 +442,38 @@ export default function HandGestureDetector({
               lineWidth: 1,
               radius: 4,
             });
-            if (targetLetter !== "J" && targetLetter !== "Z"){
-              const letter = classifyASLLetter(landmarks, targetLetter);
-              handleDetectionResult(letter);
+            
+            if (!window.lastSentTime) window.lastSentTime = 0;
+            const now = Date.now();
 
+            if (now - window.lastSentTime > 200) {
+              window.lastSentTime = now;
+
+              const features = landmarks.flatMap((lm) => [
+                lm.x,
+                lm.y,
+                lm.z,
+              ]);
+
+              fetch("http://localhost:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ features }),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.letter) {
+                    console.log(data.letter);
+                    handleDetectionResult(data.letter);
+                  } else {
+                    handleDetectionResult(null);
+                  }
+              })
+              .catch((err) => {
+                console.error("Prediction error:", err);
+                handleDetectionResult(null);
+              });
             }
-            if (targetLetter === "J"){
-              handleDetectionResult(detectJ(landmarks, motionBufferRef))
-            }
-            //else if (targetLetter === "Z"){detectZ(landmarks)}
-
-
           } else {
             handleDetectionResult(null);
           }

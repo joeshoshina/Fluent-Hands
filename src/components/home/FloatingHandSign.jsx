@@ -276,9 +276,11 @@ export default function FloatingHandSigns() {
                   className="drop-shadow-sm"
                   style={{
                     color:
-                      letter === "A" || letter === "D" || letter === "Y"
-                        ? "#8B5CF6"
-                        : "#2DD4BF",
+                      letter === "Y"
+                        ? "#E6F201"
+                        : letter === "A" || letter === "D"
+                          ? "#8B5CF6"
+                          : "#2DD4BF",
                   }}
                 >
                   {HAND_PATHS[letter] || HAND_PATHS["A"]}
@@ -287,9 +289,11 @@ export default function FloatingHandSigns() {
                   className="text-xs font-black tracking-wider"
                   style={{
                     color:
-                      letter === "A" || letter === "D" || letter === "Y"
-                        ? "#8B5CF6"
-                        : "#2DD4BF",
+                      letter === "Y"
+                        ? "#E6F201"
+                        : letter === "A" || letter === "D"
+                          ? "#8B5CF6"
+                          : "#2DD4BF",
                     opacity: 0.7,
                   }}
                 >

@@ -3,6 +3,7 @@ export default function LevelButton({
   progress = 20,
   onClick,
   color,
+  textColor,
 }) {
   const radius = 40;
   const stroke = 6;
@@ -27,7 +28,7 @@ export default function LevelButton({
         >
           {/* Background ring */}
           <circle
-            stroke="#e5e7eb"
+            stroke="rgba(255, 255, 255, 0.2)"
             fill="transparent"
             strokeWidth={stroke}
             r={normalizedRadius}
@@ -37,7 +38,7 @@ export default function LevelButton({
 
           {/* Progress ring */}
           <circle
-            stroke="#3b82f6"
+            stroke="white"
             fill="transparent"
             strokeWidth={stroke}
             strokeDasharray={circumference}
@@ -57,7 +58,9 @@ export default function LevelButton({
       </button>
 
       {/* Optional progress text */}
-      <span className="text-sm font-semibold">{safeProgress}% Complete</span>
+      <span className={`text-sm font-semibold ${textColor || "text-white"}`}>
+        {safeProgress}% Complete
+      </span>
     </div>
   );
 }
