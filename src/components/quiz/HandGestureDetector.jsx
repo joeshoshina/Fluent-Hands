@@ -470,7 +470,8 @@ export default function HandGestureDetector({
               const isRight = landmarks[20].x < landmarks[0].x? true : false;
 
               if (targetLetter === "U" || (targetLetter === "V" && isRight) || targetLetter == "L" ||
-                  (targetLetter === "Y" && !isRight)){
+                  (targetLetter === "Y" && !isRight) || (targetLetter === "O" && isRight) || (targetLetter === "A" && !isRight) ||
+                (targetLetter === "C" && isRight)){
                 //console.log("slipped in");
                 const letter = classifyASLLetter(landmarks, targetLetter);
                 handleDetectionResult(letter);
