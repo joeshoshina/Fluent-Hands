@@ -1,12 +1,12 @@
 import React from "react";
 
 const ASL_SIGNS = [
-  { letter: "A", position: "top-[10%] right-[10%]", delay: "0s", size: 70 },
-  { letter: "B", position: "top-[25%] right-[5%]", delay: "0.5s", size: 65 },
-  { letter: "C", position: "top-[15%] left-[8%]", delay: "1s", size: 65 },
-  { letter: "D", position: "top-[50%] left-[5%]", delay: "1.5s", size: 60 },
-  { letter: "I", position: "top-[70%] right-[8%]", delay: "0.8s", size: 60 },
-  { letter: "Y", position: "top-[85%] left-[6%]", delay: "0.3s", size: 65 },
+  { letter: "A", position: "top-[10%] right-[10%]", delay: "0s", size: 80 },
+  { letter: "B", position: "top-[30%] right-[5%]", delay: "0.5s", size: 90 },
+  { letter: "C", position: "top-[15%] left-[8%]", delay: "1s", size: 75 },
+  { letter: "D", position: "top-[50%] left-[5%]", delay: "1.5s", size: 80 },
+  { letter: "I", position: "top-[70%] right-[8%]", delay: "0.8s", size: 90 },
+  { letter: "Y", position: "top-[85%] left-[6%]", delay: "0.3s", size: 80 },
 ];
 
 const HAND_PATHS = {
@@ -276,9 +276,11 @@ export default function FloatingHandSigns() {
                   className="drop-shadow-sm"
                   style={{
                     color:
-                      letter === "A" || letter === "D" || letter === "Y"
-                        ? "#8B5CF6"
-                        : "#2DD4BF",
+                      letter === "Y"
+                        ? "#E6F201"
+                        : letter === "A" || letter === "D"
+                          ? "#8B5CF6"
+                          : "#2DD4BF",
                   }}
                 >
                   {HAND_PATHS[letter] || HAND_PATHS["A"]}
@@ -287,9 +289,11 @@ export default function FloatingHandSigns() {
                   className="text-xs font-black tracking-wider"
                   style={{
                     color:
-                      letter === "A" || letter === "D" || letter === "Y"
-                        ? "#8B5CF6"
-                        : "#2DD4BF",
+                      letter === "Y"
+                        ? "#E6F201"
+                        : letter === "A" || letter === "D"
+                          ? "#8B5CF6"
+                          : "#2DD4BF",
                     opacity: 0.7,
                   }}
                 >
