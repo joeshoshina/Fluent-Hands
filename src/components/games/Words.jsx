@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Heart, Trophy, X, BookOpen } from "lucide-react";
 import HandGestureDetector from "../quiz/HandGestureDetector";
 
-const WORD_LIST = ["BLUE", "HELLO", "CAT", "DOG", "SIGN", "APPLE", "HELP", "PLEASE", "RED", "IRVINE"];
+const WORD_LIST = ["CYBER", "HACKER", "ZOT", "AI", "FLUENT", "HANDS", "JOB", "BACKEND", "COMPUTER", "IRVINE"];
 const ROUND_DURATION = 10; // Match the 10s logic from your previous request
 
 const WordMode = () => {
