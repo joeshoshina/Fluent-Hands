@@ -90,6 +90,8 @@ const Challenges = () => {
                     progress={progress[mode.id] || 0}
                     color={mode.color}
                     textColor={mode.textColor}
+                    hoverSpriteSrc="/hacker-sprite.svg"
+                    hoverSpriteAlt={`${mode.label} level sprite`}
                     onClick={() => navigate(mode.route)}
                   />
                 </div>
