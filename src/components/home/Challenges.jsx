@@ -72,13 +72,15 @@ const Challenges = () => {
             ${isRight ? "rotate-[45deg]" : "-rotate-[50deg]"}`}
                     style={{
                       backgroundImage:
-                        "repeating-linear-gradient(to bottom, rgba(196,181,253,0.95) 0 10px, rgba(196,181,253,0) 10px 18px)",
+                        "repeating-linear-gradient(to bottom, rgba(208,234,147,0.95) 0 10px, rgba(208,234,147,0) 10px 18px)",
                       backgroundSize: "100% 28px",
                       /* If current node is LEFT (isRight = false), lean RIGHT (rotate 35)
             If current node is RIGHT (isRight = true), lean LEFT (rotate -35)
             */
                       left: "50%",
                       marginLeft: "-10px", // Centers the line perfectly under the node
+                      boxShadow:
+                        "0 0 12px rgba(208,234,147,0.6), 0 0 24px rgba(208,234,147,0.3)",
                     }}
                   />
                 )}
