@@ -6,7 +6,6 @@ import Words from "./components/games/Words.jsx";
 import Home from "./pages/Home.jsx";
 import "./App.css";
 
-//change
 function App() {
   return (
     <Router>
