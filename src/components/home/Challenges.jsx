@@ -20,12 +20,12 @@ const GAME_MODES = [
     route: "/games/practice",
   },
   {
-    id: "challenge",
-    label: "Challenge",
-    progressKey: "challengeProgress",
+    id: "words",
+    label: "Words",
+    progressKey: "wordsProgress",
     color: "bg-emerald-600 hover:bg-emerald-500",
     textColor: "text-emerald-400",
-    route: "/games/challenge",
+    route: "/games/words",
   },
 ];
 

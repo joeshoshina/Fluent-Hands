@@ -360,6 +360,7 @@ export default function HandGestureDetector({
   timeLimit = null,
   isPaused = false,
   minimal = false,
+  onCameraReady = () => {},
 }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -433,6 +434,12 @@ export default function HandGestureDetector({
           
           if (results.multiHandLandmarks?.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
+            motionBufferRef.current.push({
+              x: landmarks[20].x,
+              y: landmarks[20].y,
+            });
+            if (motionBufferRef.current.length > 30)
+              motionBufferRef.current.shift();
             drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
               color: "#a78bfa",
               lineWidth: 2,
@@ -442,20 +449,16 @@ export default function HandGestureDetector({
               lineWidth: 1,
               radius: 4,
             });
-            
+
             if (!window.lastSentTime) window.lastSentTime = 0;
             const now = Date.now();
 
             if (now - window.lastSentTime > 200) {
               window.lastSentTime = now;
 
-              const features = landmarks.flatMap((lm) => [
-                lm.x,
-                lm.y,
-                lm.z,
-              ]);
+              const features = landmarks.flatMap((lm) => [lm.x, lm.y, lm.z]);
 
-              fetch("http://localhost:5000/predict", {
+              fetch("http://127.0.0.1:5050/predict", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ features }),
@@ -468,11 +471,11 @@ export default function HandGestureDetector({
                   } else {
                     handleDetectionResult(null);
                   }
-              })
-              .catch((err) => {
-                console.error("Prediction error:", err);
-                handleDetectionResult(null);
-              });
+                })
+                .catch((err) => {
+                  console.error("Prediction error:", err);
+                  handleDetectionResult(null);
+                });
             }
           } else {
             handleDetectionResult(null);
@@ -497,6 +500,7 @@ export default function HandGestureDetector({
 
         if (!stopped) {
           setStatus("detecting");
+          onCameraReady();
           // Countdown timer - only if timeLimit is provided
           if (timeLimit) {
             let t = timeLimit;
