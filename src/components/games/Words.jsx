@@ -110,9 +110,9 @@ const WordMode = () => {
   const previousBest = saved ? parseInt(saved, 10) : 0;
 
   // Only save if this run was better than the last
-  if (calculatedPercent > previousBest) {
-    localStorage.setItem("wordsProgress", calculatedPercent.toString());
-  }
+
+  localStorage.setItem("wordsProgress", calculatedPercent.toString());
+  
   };
 
   // --- SETUP & GAME OVER (Blitz Style) ---
