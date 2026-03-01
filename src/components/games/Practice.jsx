@@ -133,7 +133,7 @@ const Practice = () => {
 
   if (allComplete) {
     return (
-      <div className="min-h-dvh bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
+      <div className="min-h-dvh bg-gradient-to-br from-[#003A3A] via-[#007C8A] to-[#00BBBB] flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -142,11 +142,11 @@ const Practice = () => {
           <div className="text-6xl mb-4">🎉</div>
           <h1 className="text-4xl font-black text-gray-800 mb-2">All Done!</h1>
           <p className="text-gray-500 mb-4">You signed all 26 letters!</p>
-          <div className="text-5xl font-black text-purple-600 mb-6">26/26</div>
+          <div className="text-5xl font-black text-[#00BBBB] mb-6">26/26</div>
           <div className="flex gap-3">
             <button
               onClick={handlePracticeAgain}
-              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105"
+              className="flex-1 bg-[#00BBBB] hover:bg-[#009E9E] text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105"
             >
               Practice Again
             </button>
@@ -163,7 +163,7 @@ const Practice = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#003A3A] via-[#007C8A] to-[#00BBBB] flex items-center justify-center p-4">
       <div className="w-full max-w-3xl">
         {/* === HEADER ROW === */}
         <div className="flex justify-between items-center mb-6">
@@ -225,7 +225,7 @@ const Practice = () => {
                     ${!passedLetters.has(letter) && "hover:scale-110"}
                     ${
                       currentLetter === letter
-                        ? "bg-white text-purple-900 shadow-lg scale-110"
+                        ? "bg-white text-[#004C4C] shadow-lg scale-110"
                         : passedLetters.has(letter)
                           ? "bg-green-400 text-white cursor-not-allowed opacity-80"
                           : "bg-white/20 text-white hover:bg-white/30"

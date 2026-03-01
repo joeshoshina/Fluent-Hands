@@ -14,7 +14,7 @@ function App() {
         <Route path="/demo" element={<GestureDemo />} />
         <Route path="/games/blitz" element={<Blitz />} />
         <Route path="/games/practice" element={<Practice />} />
-        <Route path="/games/words" element ={<Words />} />
+        <Route path="/games/words" element={<Words />} />
       </Routes>
     </Router>
   );
