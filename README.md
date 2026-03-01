@@ -1,16 +1,73 @@
-# React + Vite
+# Fluent Hands
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An ASL gesture recognition learning platform built with React, Vite, and MediaPipe.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js & npm
+- Python 3.8+
+- pip (Python package manager)
 
-## React Compiler
+## Setup & Running Locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Backend Setup
 
-## Expanding the ESLint configuration
+1. Backend at root level since we didnt make a folder
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+you should see model.py
+```
+
+2. Create a Python virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the Flask backend (runs on `localhost:5050`):
+
+```bash
+python model.py
+```
+
+### Frontend Setup
+
+1. From the project root, install npm dependencies:
+
+```bash
+npm install
+```
+
+2. Build the frontend:
+
+```bash
+npm run build
+```
+
+3. Start the dev server:
+
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173` (or the URL shown in your terminal).
+
+## Architecture
+
+- **Frontend**: React + Vite + Tailwind CSS + MediaPipe
+- **Backend**: Flask + TensorFlow (ASL letter classification)
+- **Game Modes**: Practice, Blitz, Words
+
+## Development Notes
+
+- Frontend components are in `src/components/`
+- Game logic syncs with the gesture detection backend
+- Progress is persisted in localStorage
+- Camera must be enabled for gesture recognition features
