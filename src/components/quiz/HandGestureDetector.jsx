@@ -36,10 +36,10 @@ function classifyASLLetter(landmarks, targetLetter) {
 
   // Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y)
   const indexPointing =
-    Math.abs(lm[6].x - lm[5].x) > Math.abs(lm[6].y - lm[5].y) &&
+    Math.abs(lm[8].x - lm[5].x) > Math.abs(lm[8].y - lm[5].y) &&
     lm[8].x < lm[5].x;
   const middlePointing =
-    Math.abs(lm[10].x - lm[9].x) > Math.abs(lm[10].y - lm[9].y) &&
+    Math.abs(lm[12].x - lm[9].x) > Math.abs(lm[12].y - lm[9].y) &&
     lm[12].x < lm[9].x;
   const ringPointing =
     Math.abs(lm[14].x - lm[13].x) > Math.abs(lm[14].y - lm[13].y) &&
@@ -159,10 +159,12 @@ function classifyASLLetter(landmarks, targetLetter) {
       pinkyCurledPointing,
     );
     if (
-      indexPointing &&
-      middlePointing &&
+      (indexPointing &&
+      middlePointing) &&
       ringCurledPointing &&
-      pinkyCurledPointing
+      pinkyCurledPointing &&
+      //!thumbExtended &&
+      !thumbStraightened
     ) {
       return "H";
     }
