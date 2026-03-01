@@ -58,7 +58,9 @@ export default function LevelButton({
       </button>
 
       {/* Optional progress text */}
-      <span className={`text-sm font-semibold ${textColor || "text-white"}`}>
+      <span
+        className={`text-sm font-bold ${textColor || "text-white"} bg-black/35 px-2.5 py-1 rounded-md backdrop-blur-[1px] shadow-[0_0_10px_rgba(0,0,0,0.45)]`}
+      >
         {safeProgress}% Complete
       </span>
     </div>
