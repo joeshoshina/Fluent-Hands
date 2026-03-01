@@ -337,6 +337,7 @@ export default function HandGestureDetector({
   const handsRef = useRef(null);
   const cameraRef = useRef(null);
   const detectionBufferRef = useRef([]);
+  const motionBufferRef = useRef([]); //creates the buffer frame for j/z motion
   const timerRef = useRef(null);
 
   const [status, setStatus] = useState("loading"); // loading | ready | detecting | success | fail
@@ -403,6 +404,11 @@ export default function HandGestureDetector({
 
           if (results.multiHandLandmarks?.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
+            motionBufferRef.current.push({
+              x: landmarks[20].x,
+              y: landmarks[20].y
+            });
+            if (motionBufferRef.current.length > 30) motionBufferRef.current.shift();
             drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
               color: "#a78bfa",
               lineWidth: 2,
