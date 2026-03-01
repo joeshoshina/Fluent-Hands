@@ -146,7 +146,7 @@ function classifyASLLetter(landmarks, targetLetter) {
       ringCurledPointing &&
       pinkyCurledPointing
     ) {
-      if (lm[3].x < lm[18].x) {
+      if ((lm[4].x < lm[18].x) && (lm[4].y < lm[18].y)) {
         return "G";
       }
     }
@@ -471,7 +471,7 @@ export default function HandGestureDetector({
 
               if (targetLetter === "U" || (targetLetter === "V" && isRight) || targetLetter == "L" ||
                   (targetLetter === "Y" && !isRight) || (targetLetter === "O" && isRight) || (targetLetter === "A" && !isRight) ||
-                (targetLetter === "C" && isRight)){
+                (targetLetter === "C" && isRight) || (targetLetter === "G" && isRight)){
                 //console.log("slipped in");
                 const letter = classifyASLLetter(landmarks, targetLetter);
                 handleDetectionResult(letter);
