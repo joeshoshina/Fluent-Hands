@@ -172,7 +172,7 @@ function classifyASLLetter(landmarks, targetLetter) {
   if (targetLetter === "I") {
     if (indexCurled && middleCurled && ringCurled && pinkyExtended) return "I";
   }
-
+  
   if (targetLetter === "K") {
     if (
       thumbStraightened &&
@@ -324,6 +324,39 @@ function classifyASLLetter(landmarks, targetLetter) {
   return null;
 }
 
+function detectJ(landmarks, motionBufferRef){
+  const pinkyTip = landmarks[20];
+
+  motionBufferRef.current.push({ x: pinkyTip.x, y: pinkyTip.y });
+  if (motionBufferRef.current.length > 30) motionBufferRef.current.shift();
+
+  if (motionBufferRef.current.length < 15) return;
+  const pts = motionBufferRef.current;
+  const start = pts[0];
+  const end = pts[pts.length - 1];
+  let maxY = -1;
+  let maxYIdx = -1;
+  for (let i = 0; i < pts.length; i++){
+    if(pts[i].y > maxY){
+      maxY = pts[i].y;
+      maxYIdx = i;
+    }
+  }
+
+  const vertPortion = maxY - start.y;
+  const hook = maxY - end.y;
+  const sidePortion = pts[maxYIdx].x - end.x;
+
+
+  //const dx = end.x - start.x;
+  //const dy = end.y - start.y;
+
+  // Downward + slight curve
+  if (vertPortion > 0.1 && hook > 0.03 && sidePortion > 0.05) {
+    motionBufferRef.current = [];
+    return "J";
+}}
+
 export default function HandGestureDetector({
   targetLetter,
   onSuccess,
@@ -401,14 +434,9 @@ export default function HandGestureDetector({
           ctx.save();
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-
+          
           if (results.multiHandLandmarks?.length > 0) {
             const landmarks = results.multiHandLandmarks[0];
-            motionBufferRef.current.push({
-              x: landmarks[20].x,
-              y: landmarks[20].y
-            });
-            if (motionBufferRef.current.length > 30) motionBufferRef.current.shift();
             drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
               color: "#a78bfa",
               lineWidth: 2,
@@ -418,8 +446,17 @@ export default function HandGestureDetector({
               lineWidth: 1,
               radius: 4,
             });
-            const letter = classifyASLLetter(landmarks, targetLetter);
-            handleDetectionResult(letter);
+            if (targetLetter !== "J" && targetLetter !== "Z"){
+              const letter = classifyASLLetter(landmarks, targetLetter);
+              handleDetectionResult(letter);
+
+            }
+            if (targetLetter === "J"){
+              handleDetectionResult(detectJ(landmarks, motionBufferRef))
+            }
+            //else if (targetLetter === "Z"){detectZ(landmarks)}
+
+
           } else {
             handleDetectionResult(null);
           }
