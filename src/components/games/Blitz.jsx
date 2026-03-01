@@ -30,13 +30,16 @@ const amount = 10;
 
 const Blitz = () => {
   const navigate = useNavigate();
-  const [gameState, setGameState] = useState("playing");
+  const [gameState, setGameState] = useState("setup");
   const [letters, setLetters] = useState(() => getRandomLetters(amount));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(3.0);
+  const [selectedDuration, setSelectedDuration] = useState(5);
+  const [roundDuration, setRoundDuration] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(5.0);
   const [cue, setCue] = useState(null);
+  const [cameraReady, setCameraReady] = useState(false);
 
   const keyRef = useRef(0);
   const timerRef = useRef(null);
@@ -47,7 +50,7 @@ const Blitz = () => {
   const isGameOver = lives === 0 || currentIndex >= letters.length;
 
   useEffect(() => {
-    if (gameState !== "playing" || cueRef.current) return;
+    if (gameState !== "playing" || cueRef.current || !cameraReady) return;
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -57,7 +60,7 @@ const Blitz = () => {
     }, 100);
 
     return () => clearInterval(timerRef.current);
-  }, [gameState, cue, currentIndex]); // cue dep still restarts timer after feedback
+  }, [gameState, cue, currentIndex, cameraReady]); // cue dep still restarts timer after feedback
 
   useEffect(() => {
     if (timeLeft <= 0 && gameState === "playing") {
@@ -94,7 +97,8 @@ const Blitz = () => {
       } else {
         // Normal progression: next letter
         setCurrentIndex((i) => i + 1);
-        setTimeLeft(3.0);
+        setTimeLeft(roundDuration);
+        setCameraReady(false);
         keyRef.current += 1;
       }
     }, 1000);
@@ -147,11 +151,67 @@ const Blitz = () => {
     setCurrentIndex(0);
     setLives(3);
     setScore(0);
-    setTimeLeft(3.0);
+    setTimeLeft(roundDuration);
     setCue(null);
+    setCameraReady(false);
     setGameState("playing");
     keyRef.current += 1;
   };
+
+  const startGame = () => {
+    setRoundDuration(selectedDuration);
+    setLetters(getRandomLetters(amount));
+    setCurrentIndex(0);
+    setLives(3);
+    setScore(0);
+    setTimeLeft(selectedDuration);
+    setCue(null);
+    setCameraReady(false);
+    setGameState("playing");
+    keyRef.current += 1;
+  };
+
+  if (gameState === "setup") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
+        >
+          <div className="text-center">
+            <h1 className="text-4xl font-black text-gray-800 mb-2">Blitz</h1>
+            <p className="text-gray-600 mb-6">
+              Choose time per letter (Time Attack)
+            </p>
+
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {[5, 10, 15].map((seconds) => (
+                <button
+                  key={seconds}
+                  onClick={() => setSelectedDuration(seconds)}
+                  className={`rounded-xl py-3 font-bold transition-all border-2 ${
+                    selectedDuration === seconds
+                      ? "bg-purple-600 text-white border-purple-600"
+                      : "bg-white text-purple-700 border-purple-200 hover:border-purple-400"
+                  }`}
+                >
+                  {seconds}s
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={startGame}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105"
+            >
+              Start Game
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   /**
    * GAME OVER SCREEN RENDER
@@ -294,25 +354,38 @@ const Blitz = () => {
             <div className="text-right">
               <div className="text-white/70 text-sm">Time Left</div>
               <div
-                // Turn red when under 1 second to create urgency
                 className={`text-3xl font-black ${
-                  timeLeft <= 1 ? "text-red-300" : "text-white"
+                  !cameraReady
+                    ? "text-yellow-200"
+                    : timeLeft <= 1
+                      ? "text-red-300"
+                      : "text-white"
                 }`}
               >
-                {timeLeft.toFixed(1)}s {/* Show 1 decimal place */}
+                {cameraReady ? `${timeLeft.toFixed(1)}s` : "Waiting..."}
               </div>
+              {!cameraReady && (
+                <div className="text-xs text-white/70 mt-1">
+                  Allow camera access to begin timer
+                </div>
+              )}
             </div>
           </div>
 
           {/* Progress bar - visual timer representation */}
           <div className="mt-2 h-2 bg-white/20 rounded-full overflow-hidden">
             <motion.div
-              // Green normally, red when < 1 second
               className={`h-full ${
-                timeLeft <= 1 ? "bg-red-500" : "bg-green-400"
+                !cameraReady
+                  ? "bg-yellow-300"
+                  : timeLeft <= 1
+                    ? "bg-red-500"
+                    : "bg-green-400"
               }`}
               initial={{ width: "100%" }} // Start full
-              animate={{ width: `${(timeLeft / 3.0) * 100}%` }} // Shrink proportionally
+              animate={{
+                width: `${cameraReady ? (timeLeft / roundDuration) * 100 : 100}%`,
+              }} // Shrink proportionally
               transition={{ duration: 0.1 }} // Smooth 100ms transition
             />
           </div>
@@ -352,7 +425,8 @@ const Blitz = () => {
                   targetLetter={currentLetter}
                   onSuccess={handleSuccess}
                   onFail={handleFail}
-                  timeLimit={3}
+                  onCameraReady={() => setCameraReady(true)}
+                  timeLimit={roundDuration}
                   minimal={true}
                 />
               </div>
