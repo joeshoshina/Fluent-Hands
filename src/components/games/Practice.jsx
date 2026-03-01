@@ -133,7 +133,7 @@ const Practice = () => {
 
   if (allComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
+      <div className="min-h-dvh bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -194,29 +194,49 @@ const Practice = () => {
           </div>
         </div>
 
-        {/* === LETTER KEYBOARD === */}
-        <div className="mb-6 bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-2 sm:p-3">
-          <div className="grid grid-cols-13 gap-2">
-            {ALL_LETTERS.map((letter) => (
-              <button
-                key={letter}
-                onClick={() => selectLetter(letter)}
-                disabled={passedLetters.has(letter)}
-                className={`aspect-square rounded text-xs font-bold transition-all transform flex items-center justify-center
-                  ${!passedLetters.has(letter) && "hover:scale-110"}
-                  ${
-                    currentLetter === letter
-                      ? "bg-white text-purple-900 shadow-lg scale-110"
-                      : passedLetters.has(letter)
-                        ? "bg-green-400 text-white cursor-not-allowed opacity-80"
-                        : "bg-white/20 text-white hover:bg-white/30"
-                  }`}
-              >
-                <span className="text-sm">
-                  {passedLetters.has(letter) ? "✓" : letter}
-                </span>
-              </button>
-            ))}
+        {/* === REFERENCE IMAGE & KEYBOARD ROW === */}
+        <div className="mb-6 grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 items-start">
+          {/* Reference Image */}
+          <div className="flex justify-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 inline-block">
+              <div className="text-white/70 text-xs mb-2 text-center">
+                Reference: {currentLetter}
+              </div>
+              <img
+                src={`/src/assets/asl/${currentLetter}.png`}
+                alt={`ASL sign for ${currentLetter}`}
+                className="w-40 h-40 object-contain rounded-lg bg-white/5"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Letter Keyboard */}
+          <div className="lg:col-span-3 bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4">
+            <div className="grid grid-cols-8 sm:grid-cols-8 lg:grid-cols-9 gap-2">
+              {ALL_LETTERS.map((letter) => (
+                <button
+                  key={letter}
+                  onClick={() => selectLetter(letter)}
+                  disabled={passedLetters.has(letter)}
+                  className={`aspect-square rounded text-xs font-bold transition-all transform flex items-center justify-center
+                    ${!passedLetters.has(letter) && "hover:scale-110"}
+                    ${
+                      currentLetter === letter
+                        ? "bg-white text-purple-900 shadow-lg scale-110"
+                        : passedLetters.has(letter)
+                          ? "bg-green-400 text-white cursor-not-allowed opacity-80"
+                          : "bg-white/20 text-white hover:bg-white/30"
+                    }`}
+                >
+                  <span className="text-sm">
+                    {passedLetters.has(letter) ? "✓" : letter}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
