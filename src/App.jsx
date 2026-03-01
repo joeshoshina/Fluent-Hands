@@ -5,6 +5,7 @@ import Practice from "./components/games/Practice.jsx";
 import Home from "./pages/Home.jsx";
 import "./App.css";
 
+//change
 function App() {
   return (
     <Router>
